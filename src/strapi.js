@@ -1,4 +1,9 @@
-export const API = import.meta.env.VITE_API_URL;
+const RAW = import.meta.env.VITE_API_URL; // dev için
+const PROXY = "/api/strapi";              // prod için Vercel Edge
+const isProd = import.meta.env.PROD;
+
+// API kökü (prod: proxy; dev: strapi)
+export const API = isProd ? PROXY : RAW;
 export const LOCALE = import.meta.env.VITE_LOCALE || "tr";
 
 async function fetchJson(url) {

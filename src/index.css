@@ -1,3 +1,4 @@
+html{ scroll-behavior:smooth }
 @import "tailwindcss";
 .footer-html p { margin: .5rem 0; }
 .footer-html a { text-decoration: underline; }
