@@ -29,6 +29,7 @@ export default function Layout() {
 
   useEffect(() => {
     getGlobal().then((data) => {
+      console.log("GLOBAL ⤵️", data); // <— kontrol et
       setG(data);
       // theme değişkenleri
       const r = document.documentElement;
@@ -75,9 +76,29 @@ export default function Layout() {
               </ul>
             </div>
           ))}
+
+          {/* Sosyal ikonlar */}
+          {Array.isArray(g.socialLinks) && g.socialLinks.length > 0 && (
+            <div className="sm:col-span-1">
+              <h4 className="font-semibold mb-2">Bizi takip edin</h4>
+              <div className="flex gap-3">
+                {g.socialLinks.map((s, i) => (
+                  <a key={i} href={s.url} target="_blank" rel="noreferrer"
+                    className="p-2 rounded-lg border hover:border-[var(--primary)]"
+                    aria-label={s.platform}>
+                    <Icon name={String(s.platform).toLowerCase()} />
+                  </a>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
-        <div className="max-w-5xl mx-auto px-6 pb-10 text-sm opacity-70"
-             dangerouslySetInnerHTML={{ __html: g.footerText }} />
+
+        {/* Rich text (HTML) */}
+        <div
+          className="max-w-5xl mx-auto px-6 pb-10 text-sm opacity-80 leading-relaxed footer-html"
+          dangerouslySetInnerHTML={{ __html: g.footerText || "" }}
+        />
       </footer>
     </div>
   );
