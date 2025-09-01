@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 const API = import.meta.env.VITE_API_URL;
 const LOCALE = import.meta.env.VITE_LOCALE || "tr";
@@ -52,7 +53,11 @@ export default function App() {
         {recipes.map((r) => (
           <article key={r.id} className="rounded-2xl border p-4 hover:shadow transition">
             {r.image && <img className="w-full h-40 object-cover rounded-xl mb-3" src={r.image} alt={r.title || "recipe"} />}
-            <h2 className="text-lg font-semibold">{r.title || r.slug || "Adsız tarif"}</h2>
+            <h2 className="text-lg font-semibold">
+              <Link to={`/recipe/${r.slug || r.id}`} className="hover:underline">
+                {r.title || r.slug || "Adsız tarif"}
+              </Link>
+            </h2>
             {r.calories && <p className="text-sm opacity-70">{r.calories} kcal</p>}
             {r.description && <p className="text-sm mt-2 line-clamp-3">{r.description}</p>}
           </article>
