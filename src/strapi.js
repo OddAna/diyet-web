@@ -1,16 +1,26 @@
 export const API = import.meta.env.VITE_API_URL;
 export const LOCALE = import.meta.env.VITE_LOCALE || "tr";
 
-export async function getGlobal() {
-  const url = `${API}/api/global?populate=deep&locale=${LOCALE}`;
+async function fetchJson(url) {
   const r = await fetch(url);
   if (!r.ok) throw new Error(`HTTP ${r.status}`);
-  const j = await r.json();
-  const g = j?.data || j?.data?.attributes || {};
-  // v5 düz, v4 attributes
-  const a = g.attributes ?? g;
+  return r.json();
+}
 
-  // logo url normalize
+export async function getGlobal() {
+  // önce populate=*, locale ile dene; 400 olursa locale'siz tekrar dene
+  const base = `${API}/api/global?populate=*`;
+  let j;
+  try {
+    j = await fetchJson(`${base}${LOCALE ? `&locale=${LOCALE}` : ""}`);
+  } catch (e) {
+    // 400 ise (çoğunlukla i18n kapalı) locale'siz dene
+    j = await fetchJson(base);
+  }
+
+  const raw = j?.data || j?.data?.attributes || {};
+  const a = raw.attributes ?? raw;
+
   let logo =
     a.logo?.url ||
     a.logo?.formats?.thumbnail?.url ||
